@@ -16,10 +16,10 @@ jobs:
           dotnet-version: 7.0.x
 
       - name: Install dependencies
-        run: dotnet restore ./WebApplicationCICD/WeatherForecast.csproj
+        run: dotnet restore ./WebApplicationCICD/WeatherForecast.cs
 
       - name: Build
-        run: dotnet build ./WebApplicationCICD/WeatherForecast.csproj --configuration Release --no-restore
+        run: dotnet build ./WebApplicationCICD/WeatherForecast.cs --configuration Release --no-restore
 
 
     
