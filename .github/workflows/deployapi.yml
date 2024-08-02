@@ -4,6 +4,9 @@ name: Deploy weather forecast API
 
 on:
   workflow_dispatch:
+	
+env: 
+  AZURE_WEBAPP_NAME: "WebApplicationCICD20240802164718"
   
 jobs:
   build:
@@ -22,4 +25,16 @@ jobs:
         run: dotnet build ./WebApplicationCICD/WebApplicationCICD.csproj --configuration Release --no-restore
 
 
-    
+    # publish
+
+      - name: Publish
+        run: dotnet publish ./WebApplicationCICD/WebApplicationCICD.csproj --configuration Release --output ./publish
+
+   # deploy to azure
+
+      - name: Deploy to Azure Web App
+	uses: azure/webapps-deploy@v2
+	with:
+	  app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.API_PUBLISH_SECRET }}
+	  package: ./publish
