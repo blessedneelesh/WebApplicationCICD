@@ -26,12 +26,10 @@ jobs:
 
 
     # publish
-
       - name: Publish
         run: dotnet publish ./WebApplicationCICD/WebApplicationCICD.csproj --configuration Release --output ./publish
 
    # deploy to azure
-
       - name: Deploy to Azure Web App
 	uses: azure/webapps-deploy@v2
 	with:
