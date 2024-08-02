@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "mesmdmgTDhu6oEeRkmmuFtWD2/UJeFb5VMlEjz6KG2Y=",
+  "Source": "WebApplicationCICD",
+  "BasePath": "_content/WebApplicationCICD",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
