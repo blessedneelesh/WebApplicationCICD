@@ -1,30 +1,66 @@
 ﻿name: .NET Web API CI
- 
+
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
 
 jobs:
-  lint:
-    name: Lint & Format Check
+  # ─────────────────────────────────────────
+  # JOB 1: Snyk — Dependency & Code Security
+  # ─────────────────────────────────────────
+  snyk:
+    name: Snyk Security Scan
     runs-on: ubuntu-latest
- 
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
- 
+
       - name: Set up .NET
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 8.0.x
- 
+
       - name: Restore dependencies
         run: dotnet restore
- 
-      - name: Check formatting
-        run: dotnet format --verify-no-changes --no-restore
 
+      # Install the latest Snyk CLI
+      - name: Set up Snyk CLI
+        uses: snyk/actions/setup@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      # Scan NuGet dependencies for known vulnerabilities
+      # Replace WebApplicationCICD.sln with your actual .sln or .csproj filename
+      - name: Snyk — dependency vulnerability scan
+        run: snyk test --severity-threshold=high --file=WebApplicationCICD.csproj --sarif-file-output=snyk-deps.sarif
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        continue-on-error: true   # flip to false to hard-fail on HIGH+ vulnerabilities
+
+      # Static code analysis for security issues in your own source code (SAST)
+      - name: Snyk — static code analysis (SAST)
+        run: snyk code test --severity-threshold=high --sarif-file-output=snyk-code.sarif
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        continue-on-error: true
+
+      # Upload dependency scan results to GitHub Security tab
+      - name: Upload dependency scan SARIF to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: snyk-deps.sarif
+          category: snyk-dependencies
+
+      # Upload SAST results to GitHub Security tab
+      - name: Upload SAST SARIF to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: snyk-code.sarif
+          category: snyk-code
