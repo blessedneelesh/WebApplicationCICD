@@ -27,5 +27,4 @@ jobs:
  
       - name: Check formatting
         run: dotnet format --verify-no-changes --no-restore
-        continue-on-error: true
 
