@@ -31,6 +31,7 @@ jobs:
       - name: Install Snyk CLI
         run: npm install --global snyk@1.1293.1 --ignore-scripts
 
+
       - name: Snyk dependency vulnerability scan
         run: snyk test --severity-threshold=high --file=WebApplicationCICD.sln --sarif-file-output=snyk-deps.sarif
         env:
