@@ -37,7 +37,7 @@ jobs:
       # Scan NuGet dependencies for known vulnerabilities
       # Replace WebApplicationCICD.sln with your actual .sln or .csproj filename
       - name: Snyk — dependency vulnerability scan
-        run: snyk test --severity-threshold=high --file=WebApplicationCICD.sln --sarif-file-output=snyk-deps.sarif
+        run: snyk test --severity-threshold=high --file=WebApplicationCICD.csproj --sarif-file-output=snyk-deps.sarif
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         continue-on-error: true   # flip to false to hard-fail on HIGH+ vulnerabilities
